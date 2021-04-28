@@ -46,6 +46,7 @@ void expandir(pila_t* pila){
         if(datos){
             pila->datos = datos;
         }
+        pila->capacidad = pila->capacidad*2;
     }
 }
 
@@ -56,8 +57,10 @@ bool pila_apilar(pila_t *pila, void *valor){
     if(!pila) return;
     if(pila->cantidad == pila->capacidad - pila->cantidad){
         expandir(pila);
-        
     }
+    pila->datos[pila->cantidad] = valor;
+    pila->cantidad++;
+    
 }
 
 // Obtiene el valor del tope de la pila. Si la pila tiene elementos,
@@ -66,7 +69,9 @@ bool pila_apilar(pila_t *pila, void *valor){
 // Post: se devolvió el valor del tope de la pila, cuando la pila no está
 // vacía, NULL en caso contrario.
 void *pila_ver_tope(const pila_t *pila){
-    if(!pila) return;
+    if(!pila || pila->cantidad == 0) return NULL;
+    return pila->datos[pila->cantidad -1];
+
 }
 
 // Saca el elemento tope de la pila. Si la pila tiene elementos, se quita el
@@ -76,7 +81,12 @@ void *pila_ver_tope(const pila_t *pila){
 // Post: si la pila no estaba vacía, se devuelve el valor del tope anterior
 // y la pila contiene un elemento menos.
 void *pila_desapilar(pila_t *pila){
-    if(!pila) return;
+    if(!pila || pila->cantidad == 0) return NULL;
+    void* valor = pila->datos[pila->cantidad -1];
+    pila->datos[pila->cantidad -1] = NULL;
+    pila->cantidad--;
+    return valor;
+
 }
 
 
