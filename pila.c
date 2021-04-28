@@ -54,13 +54,13 @@ void expandir(pila_t* pila){
 // Pre: la pila fue creada.
 // Post: se agregó un nuevo elemento a la pila, valor es el nuevo tope.
 bool pila_apilar(pila_t *pila, void *valor){
-    if(!pila) return;
+    if(!pila) return false;
     if(pila->cantidad == pila->capacidad - pila->cantidad){
         expandir(pila);
     }
     pila->datos[pila->cantidad] = valor;
     pila->cantidad++;
-    
+    return true;
 }
 
 // Obtiene el valor del tope de la pila. Si la pila tiene elementos,
