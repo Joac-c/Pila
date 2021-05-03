@@ -19,6 +19,7 @@ struct pila {
 pila_t *pila_crear(void){
     pila_t* pila = calloc(1, sizeof(pila_t));
     pila->datos = calloc(2, sizeof(void*));
+    pila->capacidad = 2;
     return pila;
     
 }
@@ -42,7 +43,7 @@ bool pila_esta_vacia(const pila_t *pila){
 
 void expandir(pila_t* pila){
     if(pila && pila->datos){
-        void** datos = realloc(pila->datos, pila->capacidad*2);
+        void** datos = realloc(pila->datos, pila->capacidad*2*sizeof(void*));
         if(datos){
             pila->datos = datos;
         }
@@ -55,7 +56,7 @@ void expandir(pila_t* pila){
 // Post: se agregó un nuevo elemento a la pila, valor es el nuevo tope.
 bool pila_apilar(pila_t *pila, void *valor){
     if(!pila) return false;
-    if(pila->cantidad == pila->capacidad - pila->cantidad){
+    if(pila->cantidad*2 == pila->capacidad ){
         expandir(pila);
     }
     pila->datos[pila->cantidad] = valor;
@@ -82,9 +83,15 @@ void *pila_ver_tope(const pila_t *pila){
 // y la pila contiene un elemento menos.
 void *pila_desapilar(pila_t *pila){
     if(!pila || pila->cantidad == 0) return NULL;
-    void* valor = pila->datos[pila->cantidad -1];
+    void* valor = pila_ver_tope(pila);
     pila->datos[pila->cantidad -1] = NULL;
     pila->cantidad--;
+    if(pila->cantidad == pila->capacidad/4 && pila && pila->capacidad >= 4){
+    void** puntero = realloc(pila->datos, pila->capacidad/2*sizeof(void*));
+    if(puntero){
+        pila->datos = puntero;
+    }
+    }
     return valor;
 
 }
