@@ -51,6 +51,17 @@ void expandir(pila_t* pila){
     }
 }
 
+
+void reducir(pila_t* pila){
+    if(pila && pila->datos){
+        void** puntero = realloc(pila->datos, pila->capacidad/2*sizeof(void*));
+        if(puntero){
+            pila->datos = puntero;
+            pila->capacidad = pila->capacidad/2;
+        }
+    }
+}
+
 // Agrega un nuevo elemento a la pila. Devuelve falso en caso de error.
 // Pre: la pila fue creada.
 // Post: se agregó un nuevo elemento a la pila, valor es el nuevo tope.
@@ -87,10 +98,7 @@ void *pila_desapilar(pila_t *pila){
     pila->datos[pila->cantidad -1] = NULL;
     pila->cantidad--;
     if(pila->cantidad == pila->capacidad/4 && pila && pila->capacidad >= 4){
-    void** puntero = realloc(pila->datos, pila->capacidad/2*sizeof(void*));
-    if(puntero){
-        pila->datos = puntero;
-    }
+        reducir(pila);
     }
     return valor;
 
